@@ -1,12 +1,24 @@
-use std::time::{Duration, Instant};
+use std::{
+    fmt::Debug,
+    time::{Duration, Instant},
+};
 
-pub struct TickMachine {
+#[derive(Clone)]
+pub struct Tick {
     start: Instant,
     last_tick: Duration,
     tick: Duration,
 }
 
-impl TickMachine {
+impl Debug for Tick {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("TickMachine")
+            .field("tick", &self.tick)
+            .finish()
+    }
+}
+
+impl Tick {
     pub fn new(tick: Duration) -> Self {
         Self {
             start: Instant::now(),
@@ -23,5 +35,35 @@ impl TickMachine {
             f();
             self.last_tick += self.tick;
         }
+    }
+}
+
+pub struct TickMachine<F> {
+    f: F,
+    tick: Tick,
+}
+
+impl<F: Fn()> TickMachine<F> {
+    pub fn new(tick: Tick, f: F) -> TickMachine<F> {
+        TickMachine { f, tick }
+    }
+
+    pub fn tick(&mut self) {
+        self.tick.tick(|| (self.f)());
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use std::time::Duration;
+
+    use crate::{Tick, TickMachine};
+
+    #[test]
+    fn test() {
+        let tick = Duration::from_millis(50);
+        let tick = Tick::new(tick);
+        let mut machine = TickMachine::new(tick, || {});
+        machine.tick();
     }
 }

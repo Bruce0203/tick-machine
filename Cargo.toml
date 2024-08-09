@@ -1,6 +1,6 @@
 [package]
 name = "tick-machine"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 author = "Bruce0203 <brucefreedy@gmail.com>"
 description = "tick calculator"
@@ -11,4 +11,14 @@ include = [
     "Cargo.toml",
 ]
 
-[dependencies]
+[dev-dependencies]
+divan = "0.1.14"
+
+
+[[bench]]
+name = "compare"
+harness = false
+
+
+[profile.bench]
+lto = true
