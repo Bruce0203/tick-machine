@@ -2,5 +2,13 @@
 name = "tick-machine"
 version = "0.1.0"
 edition = "2021"
+author = "Bruce0203 <brucefreedy@gmail.com>"
+description = "tick calculator"
+repository = "https://github.com/Bruce0203/tick-machine"
+license = "MIT"
+include = [
+    "**/*.rs",
+    "Cargo.toml",
+]
 
 [dependencies]
