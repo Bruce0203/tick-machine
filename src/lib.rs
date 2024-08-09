@@ -3,7 +3,6 @@ use std::{
     time::{Duration, Instant},
 };
 
-#[derive(Clone)]
 pub struct Tick {
     start: Instant,
     last_tick: Duration,
