@@ -3,13 +3,17 @@ use std::{
     time::{Duration, Instant},
 };
 
-pub struct Tick {
+pub trait Tick {
+    fn tick(&mut self);
+}
+
+pub struct TickState {
     start: Instant,
     last_tick: Duration,
     tick: Duration,
 }
 
-impl Debug for Tick {
+impl Debug for TickState {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("TickMachine")
             .field("tick", &self.tick)
@@ -17,7 +21,7 @@ impl Debug for Tick {
     }
 }
 
-impl Tick {
+impl TickState {
     pub fn new(tick: Duration) -> Self {
         Self {
             start: Instant::now(),
@@ -39,15 +43,17 @@ impl Tick {
 
 pub struct TickMachine<F> {
     f: F,
-    tick: Tick,
+    tick: TickState,
 }
 
 impl<F: Fn()> TickMachine<F> {
-    pub fn new(tick: Tick, f: F) -> TickMachine<F> {
+    pub fn new(tick: TickState, f: F) -> TickMachine<F> {
         TickMachine { f, tick }
     }
+}
 
-    pub fn tick(&mut self) {
+impl<F: Fn()> Tick for TickMachine<F> {
+    fn tick(&mut self) {
         self.tick.tick(|| (self.f)());
     }
 }
@@ -56,12 +62,12 @@ impl<F: Fn()> TickMachine<F> {
 mod test {
     use std::time::Duration;
 
-    use crate::{Tick, TickMachine};
+    use crate::{Tick, TickMachine, TickState};
 
     #[test]
     fn test() {
         let tick = Duration::from_millis(50);
-        let tick = Tick::new(tick);
+        let tick = TickState::new(tick);
         let mut machine = TickMachine::new(tick, || {});
         machine.tick();
     }
