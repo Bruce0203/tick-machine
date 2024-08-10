@@ -1,9 +1,10 @@
 # example
 ```rust 
-let mut tick_machine = TickMachine::new(Duration::from_millis(50));
+let tick = Duration::from_millis(50);
+let mut tick = TickState::new(tick);
 loop {
-    tick_machine.tick(|| {
-        //tick
+    tick.try_tick(|| {
+        println!("tick per 50ms");
     });
 }
 

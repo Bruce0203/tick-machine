@@ -30,7 +30,7 @@ impl TickState {
         }
     }
 
-    pub fn tick<F>(&mut self, f: F)
+    pub fn try_tick<F>(&mut self, f: F)
     where
         F: FnOnce(),
     {
@@ -54,7 +54,7 @@ impl<F: Fn()> TickMachine<F> {
 
 impl<F: Fn()> Tick for TickMachine<F> {
     fn try_tick(&mut self) {
-        self.tick.tick(|| (self.f)());
+        self.tick.try_tick(|| (self.f)());
     }
 }
 
