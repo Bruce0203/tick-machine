@@ -4,7 +4,7 @@ use std::{
 };
 
 pub trait Tick {
-    fn tick(&mut self);
+    fn try_tick(&mut self);
 }
 
 pub struct TickState {
@@ -53,7 +53,7 @@ impl<F: Fn()> TickMachine<F> {
 }
 
 impl<F: Fn()> Tick for TickMachine<F> {
-    fn tick(&mut self) {
+    fn try_tick(&mut self) {
         self.tick.tick(|| (self.f)());
     }
 }
@@ -69,6 +69,6 @@ mod test {
         let tick = Duration::from_millis(50);
         let tick = TickState::new(tick);
         let mut machine = TickMachine::new(tick, || {});
-        machine.tick();
+        machine.try_tick();
     }
 }

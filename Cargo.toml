@@ -1,6 +1,6 @@
 [package]
 name = "tick-machine"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
 author = "Bruce0203 <brucefreedy@gmail.com>"
 description = "tick calculator"
